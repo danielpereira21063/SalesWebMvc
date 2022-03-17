@@ -1,6 +1,17 @@
 ﻿@{
+    Layout = "_Layout";
     ViewData["Title"] = "Home Page";
 }
+
+<div class="navbar-collapse collapse">
+    <ul class="nav navbar-nav">
+        <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+        <li><a asp-area="" asp-controller="Departaments" asp-action="Index">Departaments</a></li>
+        <li><a asp-area="" asp-controller="Sellers" asp-action="Index">Sellers</a></li>
+        <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
+        <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+    </ul>
+</div>
 
 <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
     <ol class="carousel-indicators">
