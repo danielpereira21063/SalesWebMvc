@@ -4,22 +4,26 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SalesWebMvc.Data;
 using SalesWebMvc.Models;
+using SalesWebMvc.Services;
 
 namespace SalesWebMvc.Controllers
 {
     public class DepartamentsController : Controller
     {
+        private readonly DepartamentService _departamentService;
+
         private readonly SalesWebMvcContext _context;
 
-        public DepartamentsController(SalesWebMvcContext context)
+        public DepartamentsController(DepartamentService departamentService, SalesWebMvcContext context)
         {
+            _departamentService = departamentService;
             _context = context;
         }
 
         // GET: Departaments
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Departament.ToListAsync());
+            return View(_departamentService.FindAll());
         }
 
         // GET: Departaments/Details/5
@@ -30,8 +34,7 @@ namespace SalesWebMvc.Controllers
                 return NotFound();
             }
 
-            var departament = await _context.Departament
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var departament = _departamentService.FindAll().Where(x => x.Id == id);
             if (departament == null)
             {
                 return NotFound();
