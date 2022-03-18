@@ -2,6 +2,8 @@
 using SalesWebMvc.Models;
 using SalesWebMvc.Models.ViewModels;
 using SalesWebMvc.Services;
+using SalesWebMvc.Services.Exceptions;
+using System.Collections.Generic;
 
 namespace SalesWebMvc.Controllers
 {
@@ -51,13 +53,13 @@ namespace SalesWebMvc.Controllers
 
         public IActionResult Delete(int? id)
         {
-            if(id == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
             var seller = _sellerService.FindById(id.Value);
-            if(seller == null)
+            if (seller == null)
             {
                 return NotFound();
             }
@@ -67,8 +69,62 @@ namespace SalesWebMvc.Controllers
 
         public IActionResult Details(int? id)
         {
+            return View(_sellerService.FindById(id.Value));
+        }
+
+        public IActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
             var seller = _sellerService.FindById(id.Value);
-            return View(seller);
+            if (seller == null)
+            {
+                return NotFound();
+            }
+
+            List<Departament> departaments = _departamentService.FindAll();
+            _sellerService.Update(seller);
+
+            var sellerFormViewModel = new SellerFormViewModel
+            {
+                Departaments = departaments,
+                Seller = seller
+            };
+
+            return View(sellerFormViewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int? id, Seller seller)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            if (id != seller.Id)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                _sellerService.Update(seller);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
+            catch(DbConcurrencyException)
+            {
+                return BadRequest();
+            }
+
         }
     }
 }
