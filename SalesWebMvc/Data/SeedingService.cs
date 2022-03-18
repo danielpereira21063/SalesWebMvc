@@ -9,7 +9,6 @@ namespace SalesWebMvc.Data
     {
         private SalesWebMvcContext _context;
 
-
         public SeedingService(SalesWebMvcContext context)
         {
             _context = context;
