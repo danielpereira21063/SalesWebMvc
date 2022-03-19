@@ -38,6 +38,15 @@ namespace SalesWebMvc.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Seller seller)
         {
+            if (!ModelState.IsValid)
+            {
+                var sellerFormViewModel = new SellerFormViewModel
+                {
+                    Departaments = _departamentService.FindAll(),
+                    Seller = seller
+                };
+                return View(sellerFormViewModel);
+            }
             _sellerService.Insert(seller);
 
             return RedirectToAction(nameof(Index));
@@ -76,7 +85,7 @@ namespace SalesWebMvc.Controllers
             }
             var seller = _sellerService.FindById(id.Value);
 
-            if(seller == null)
+            if (seller == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "Seller not found" });
             }
@@ -90,7 +99,6 @@ namespace SalesWebMvc.Controllers
             {
                 return RedirectToAction(nameof(Error), new { message = "Id not provided" });
             }
-
             var seller = _sellerService.FindById(id.Value);
             if (seller == null)
             {
@@ -121,6 +129,16 @@ namespace SalesWebMvc.Controllers
             if (id != seller.Id)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id mismatch" });
+            }
+
+            if (!ModelState.IsValid)
+            {
+                var sellerFormViewModel = new SellerFormViewModel
+                {
+                    Departaments = _departamentService.FindAll(),
+                    Seller = seller
+                };
+                return View(sellerFormViewModel);
             }
 
             try
