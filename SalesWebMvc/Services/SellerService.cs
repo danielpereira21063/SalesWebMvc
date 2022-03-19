@@ -44,7 +44,7 @@ namespace SalesWebMvc.Services
 
         public void Update(Seller seller)
         {
-            if(!_context.Seller.Any(x => x.Id == seller.Id))
+            if (!_context.Seller.Any(x => x.Id == seller.Id))
             {
                 throw new NotFoundException("Seller not found.");
             }
@@ -54,7 +54,7 @@ namespace SalesWebMvc.Services
                 _context.Update(seller);
                 _context.SaveChanges();
             }
-            catch(DbConcurrencyException e)
+            catch (DbConcurrencyException e)
             {
                 throw new DbConcurrencyException(e.Message);
             }
